@@ -90,7 +90,7 @@ async function RespondToDispute(contract, dispute_id = 'dispute_001', response =
 }
 
 async function GetDispute(contract, dispute_id = 'dispute_001'){
-    result = await contract.evaluateTransaction('GetDispute', dispute_id);
+    let result = await contract.evaluateTransaction('GetDispute', dispute_id);
 			console.log(`*** Result: ${prettyJSONString(result.toString())}`);
     return result;
 }
@@ -100,10 +100,22 @@ async function ConfirmResolution(contract, dispute_id = 'dispute_001'){
     console.log('Dispute resolved successfully');
 }
 
-async function AddACL(contract, Id = 1, Identity = 'org2', Identifier = 'org1-69', Qualifier = 'example_qual'){
-    await contract.submitTransaction('AddACL', Id, Identity, Identifier, Qualifier);
-    console.log('Dispute raised successfully');
+async function AddACL(contract, Id = '1', Identity = 'org2', Identifier = 'org1-69', Qualifier = 'example_qual', Validity = '2024-1-1 0:0:0'){
+    await contract.submitTransaction('AddACL', Id, Identity, Identifier, Qualifier, Validity);
+    console.log('ACL entry created successfully');
 }
+
+async function GetACL(contract, Id = '1' ){
+    let result = await contract.evaluateTransaction('GetACL', Id);
+			console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+    return result;
+}
+
+async function UpdateACL(contract, Id = '1', Qualifier = 'example_qual'){
+    await contract.submitTransaction('UpdateACL', Id, Qualifier);
+    console.log('ACL entry updated successfully');
+}
+
 
 
 module.exports  = {
@@ -111,5 +123,9 @@ module.exports  = {
     RaiseDispute,
     RespondToDispute,
     GetDispute,
-    ConfirmResolution
+    ConfirmResolution,
+    AddACL,
+    GetACL,
+    UpdateACL
+
 };

@@ -30,9 +30,10 @@ app.get('/send-request', async (req, res) => {
   } catch (error) {
     // No response data, so we raise a dispute
     console.error(error);
-    await drs_contract.submitTransaction('RaiseDispute', 'dispute_002', 'Server1', 'Server2', 'Data not received from Server2');
+    await fabricUtilModule.RaiseDispute(drs_contract, 'dispute_001', 'Server1', 'Server2', 'Data not received from Server2')
+    // await drs_contract.submitTransaction('RaiseDispute', );
 
-    console.log('Dispute raised successfully');
+    console.log('Dispute raised successfully, sending response');
 
     res.send("Error occured, dispute raised successfully, " + "error is the following: " + error);
   }
@@ -69,6 +70,34 @@ app.post('/confirm-dispute-resolution', async (req, res) => {
   }
   res.send(response)
 });
+
+app.get('/get-acl', async (req, res) => {
+  let acl = await fabricUtilModule.GetACL(acl_contract, '1');
+  console.log(acl);
+  res.send(acl)
+});
+
+app.post('/update-acl', async (req, res) => {
+  await fabricUtilModule.UpdateACL(acl_contract, '1', 'new_qual');
+  console.log('ACL Update applied, sending response');
+  var response = {
+    status  : 200,
+    success : 'ACL updated Successfully'
+  }
+  res.send(response)
+});
+
+app.post('/create-acl', async (req, res) =>{
+  await fabricUtilModule.AddACL(acl_contract, '1', 'org2', 'org1-69', 'example_qual', '2023-12-25 11:59:59');
+
+  console.log('ACL entry added successfully, sending response');
+  var response = {
+    status  : 200,
+    success : 'ACL entry added successfully'
+  }
+  res.send(response);
+
+})
 
 app.listen(port, () => {
   console.log(`Server 1 running on port ${port}`);
