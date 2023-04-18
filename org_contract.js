@@ -12,6 +12,8 @@ let contract;
 (async function() {
   let start = new Date().getTime();
   contract = await fabricUtilModule.getContract();
+  acl_contract = contract.acl;
+  drs_contract = contract.drs;
   let end = new Date().getTime();
   let time_taken = end-start
   console.log("time taken = " + time_taken + " milliseconds")
@@ -28,11 +30,11 @@ app.get('/send-request', async (req, res) => {
   } catch (error) {
     // No response data, so we raise a dispute
     console.error(error);
-    await contract.submitTransaction('RaiseDispute', 'dispute_002', 'Server1', 'Server2', 'Data not received from Server2');
+    await drs_contract.submitTransaction('RaiseDispute', 'dispute_002', 'Server1', 'Server2', 'Data not received from Server2');
 
     console.log('Dispute raised successfully');
 
-    res.send("Error occured, dispute raised successfully" + "error is the following:" + error);
+    res.send("Error occured, dispute raised successfully, " + "error is the following: " + error);
   }
 });
 
@@ -43,7 +45,7 @@ app.get('/send-response', (req, res) => {
   });
 
 app.post('/respond-dispute', async (req, res) => {
-    await fabricUtilModule.RespondToDispute(contract, 'dispute_001', 'The response data');
+    await fabricUtilModule.RespondToDispute(drs_contract, 'dispute_001', 'The response data');
     console.log('responded to dispute');
     var response = {
       status  : 200,
@@ -53,13 +55,13 @@ app.post('/respond-dispute', async (req, res) => {
 });
 
 app.get('/get-dispute', async (req, res) => {
-  let dispute = await fabricUtilModule.GetDispute(contract, 'dispute_001');
+  let dispute = await fabricUtilModule.GetDispute(drs_contract, 'dispute_001');
   console.log(dispute);
   res.send(dispute)
 });
 
 app.post('/confirm-dispute-resolution', async (req, res) => {
-  await fabricUtilModule.ConfirmResolution(contract, 'dispute_001');
+  await fabricUtilModule.ConfirmResolution(drs_contract, 'dispute_001');
   console.log('Dispute resolved successfully');
   var response = {
     status  : 200,

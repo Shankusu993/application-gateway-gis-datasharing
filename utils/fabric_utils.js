@@ -56,8 +56,12 @@ async function getContract(){
     const network = await gateway.getNetwork(channelName);
 
     // Get the contract from the network.
-    let contract = network.getContract(chaincodeName);
-    return contract
+    let drs_contract = network.getContract('drs');
+    let acl_contract = network.getContract('acl');
+    return {
+        drs: drs_contract,
+        acl: acl_contract
+    }
     
     // const ccpPath = path.resolve(__dirname, 'connection-profile.yaml');
     // const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
@@ -94,6 +98,11 @@ async function GetDispute(contract, dispute_id = 'dispute_001'){
 async function ConfirmResolution(contract, dispute_id = 'dispute_001'){
     await contract.submitTransaction('ConfirmResolution', dispute_id);
     console.log('Dispute resolved successfully');
+}
+
+async function AddACL(contract, Id = 1, Identity = 'org2', Identifier = 'org1-69', Qualifier = 'example_qual'){
+    await contract.submitTransaction('AddACL', Id, Identity, Identifier, Qualifier);
+    console.log('Dispute raised successfully');
 }
 
 
