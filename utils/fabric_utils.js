@@ -100,7 +100,7 @@ async function ConfirmResolution(contract, dispute_id = 'dispute_001'){
     console.log('Dispute resolved successfully');
 }
 
-async function AddACL(contract, Id = '1', Identity = 'org2', Identifier = 'org1-69', Qualifier = 'example_qual', Validity = '2024-1-1 0:0:0'){
+async function AddACL(contract, Id = '1', Identity = 'org2', Identifier = 'org1-69', Qualifier = 'MultiPolygon.poly_landmarks', Validity = '2024-1-1 0:0:0'){
     await contract.submitTransaction('AddACL', Id, Identity, Identifier, Qualifier, Validity);
     console.log('ACL entry created successfully');
 }
@@ -111,7 +111,7 @@ async function GetACL(contract, Id = '1' ){
     return result;
 }
 
-async function UpdateACL(contract, Id = '1', Qualifier = 'example_qual'){
+async function UpdateACL(contract, Id = '1', Qualifier = 'MultiPolygon.poly_landmarks'){
     await contract.submitTransaction('UpdateACL', Id, Qualifier);
     console.log('ACL entry updated successfully');
 }
